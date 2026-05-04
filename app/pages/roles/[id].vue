@@ -32,7 +32,7 @@ const fetchPermissions = async () => {
     const response = await get('/permissions')
     permissions.value = response.data || []
   } catch (error) {
-    console.error('Failed to fetch permissions:', error)
+    console.error('Failed to fetch permission:', error)
   }
 }
 
@@ -41,7 +41,7 @@ const saveRole = async () => {
   try {
     await put(`/roles/${route.params.id}`, {
       ...role.value,
-      permissions: rolePermissions.value
+      permission: rolePermissions.value
     })
     await fetchRole()
   } catch (error) {

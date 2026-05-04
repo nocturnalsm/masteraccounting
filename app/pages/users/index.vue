@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth'
+  middleware: ['auth', 'permission'],
+  permissions: ['user-list']
 })
 
 const { get, post, del } = useApi()
@@ -10,8 +11,7 @@ const columns = [
   { accessorKey: 'name', header: 'Name', sortable: true },
   { accessorKey: 'email', header: 'Email', sortable: true },
   { accessorKey: 'role', header: 'Role', sortable: true },
-  { accessorKey: 'company', header: 'Company', sortable: true },
-  { accessorKey: 'actions', header: 'Actions', sortable: false }
+  { accessorKey: 'company', header: 'Company', sortable: true }
 ]
 
 const page = ref(1)
@@ -25,8 +25,8 @@ const { data: response, pending, refresh } = await useAsyncData(
   () => get('/users', {
     params: {
       page: page.value,
-      sort: sortBy.value.column,
-      order: sortBy.value.direction,
+      sort: sortBy.value.column ?? 'name',
+      order: sortBy.value.direction ?? 'asc',
       search: search.value
     }
   }),
@@ -80,6 +80,7 @@ const deleteUser = async (user: any) => {
     <DataTable
       v-model:page="page"
       v-model:sort="sortBy"
+      v-model:search="search"
       :columns="columns"
       :data="users"
       :total="total"

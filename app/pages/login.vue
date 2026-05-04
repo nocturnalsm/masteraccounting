@@ -40,8 +40,7 @@ const onSubmit = async () => {
 <template>
   <div class="w-full space-y-8 flex items-center justify-center h-screen">
     <div class="w-full max-w-md space-y-2">
-        <div class="text-center">
-            <AppLogo class="mx-auto h-12 w-auto" />
+        <div class="text-center">            
             <h2 class="mt-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
                 Sign in to your account
             </h2>

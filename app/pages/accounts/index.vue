@@ -12,7 +12,6 @@ const columns = [
   { accessorKey: 'type', header: 'Type', sortable: true },
   { accessorKey: 'category', header: 'Category', sortable: true },
   { accessorKey: 'balance', header: 'Balance', sortable: true },
-  { accessorKey: 'actions', header: 'Actions', sortable: false }
 ]
 
 const showCreateModal = ref(false)
@@ -35,8 +34,8 @@ const { data: response, pending, refresh } = await useAsyncData(
   () => get('/ledger/accounts', {
     params: {
       page: page.value,
-      sort: sortBy.value.column,
-      order: sortBy.value.direction,
+      sort: sortBy.value.column ?? 'code',
+      order: sortBy.value.direction ?? 'asc',
       search: search.value
     }
   }),

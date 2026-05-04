@@ -3,7 +3,8 @@
 import { h, resolveComponent, ref } from 'vue'
 
 definePageMeta({
-  middleware: 'auth'
+  middleware: ['auth', 'permission'],
+  permissions:['company-list']
 })
 
 const { get, post, del } = useApi()
@@ -20,7 +21,6 @@ const columns = [
       row.getValue('is_active') ? 'Active' : 'Inactive'
     )
   }},
-  { accessorKey: 'actions', header: 'Actions', sortable: false }
 ]
 
 const showCreateModal = ref(false)
@@ -35,8 +35,8 @@ const { data: response, pending, refresh } = await useAsyncData(
   () => get('/companies', {
     params: {
       page: page.value,
-      sort: sortBy.value.column,
-      order: sortBy.value.direction,
+      sort: sortBy.value.column ?? 'name',
+      order: sortBy.value.direction ?? 'asc',
       search: search.value
     }
   }),
@@ -98,7 +98,14 @@ const deleteCompany = async (company: any) => {
       :page-size="10"
       @update:sort="(sort) => sortBy = sort"
       @search="(val) => search = val"
-    />
+    >
+      <template #row-action-menu="{ row }">
+        <div class="flex items-center gap-2 w-full" @click="toggleStatus(row)">
+          <UIcon :name="row.is_active ? 'i-lucide-user-minus' : 'i-lucide-user-check'" class="h-4 w-4" />
+          <span>{{ row.is_active ? 'Deactivate' : 'Activate' }}</span>
+        </div>
+      </template>
+    </DataTable>
 
     <CreateModal
       v-model:open="showCreateModal"

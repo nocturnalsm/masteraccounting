@@ -13,7 +13,6 @@ const columns = [
   { key: 'description', label: 'Description', sortable: true },
   { key: 'total_amount', label: 'Total', sortable: true },
   { key: 'status', label: 'Status', sortable: true },
-  { key: 'actions', label: 'Actions', sortable: false }
 ]
 
 const journals = ref([])

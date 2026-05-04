@@ -1,6 +1,7 @@
 <script setup lang="ts">
 definePageMeta({
-  middleware: 'auth'
+  middleware: ['auth', 'permission'],
+  permissions: ['role-list']
 })
 
 const { get, post, del } = useApi()
@@ -9,8 +10,7 @@ const router = useRouter()
 const columns = [
   { accessorKey: 'name', header: 'Name', sortable: true },
   { accessorKey: 'permissions_count', header: 'Permissions', sortable: true },
-  { accessorKey: 'users_count', header: 'Users', sortable: true },
-  { accessorKey: 'actions', header: 'Actions', sortable: false }
+  { accessorKey: 'users_count', header: 'Users', sortable: true }
 ]
 
 const showCreateModal = ref(false)
@@ -25,8 +25,8 @@ const { data: response, pending, refresh } = await useAsyncData(
   () => get('/roles', {
     params: {
       page: page.value,
-      sort: sortBy.value.column,
-      order: sortBy.value.direction,
+      sort: sortBy.value.column ?? 'name',
+      order: sortBy.value.direction ?? 'asc',
       search: search.value
     }
   }),

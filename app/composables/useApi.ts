@@ -9,9 +9,9 @@ export const useApi = () => {
       'Content-Type': 'application/json'
     },
     onRequest({ options }) {
-      if (token.value) {
+      if (token) {
         const headers = new Headers(options.headers)
-        headers.set('Authorization', `Bearer ${token.value}`)
+        headers.set('Authorization', `Bearer ${token}`)
         options.headers = headers
       }
     },

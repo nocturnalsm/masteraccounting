@@ -4,17 +4,19 @@
 const { user, logout } = useAuth()
 
 const masterItems = [
-  { label: 'Companies', icon: 'i-lucide-building-2', to: '/companies' },
-  { label: 'Users', icon: 'i-lucide-users', to: '/users' },
+  { label: 'Companies', icon: 'i-lucide-building-2', to: '/companies', permission: 'company-list' },
+  { label: 'Users', icon: 'i-lucide-users', to: '/users', permission: 'user-list' },
   { separator: true },
-  { label: 'Permissions', icon: 'i-lucide-shield', to: '/permissions' },
-  { label: 'Roles', icon: 'i-lucide-user-cog', to: '/roles' },
+  { label: 'Permissions', icon: 'i-lucide-shield', to: '/permissions', permission: 'permission-list' },
+  { label: 'Roles', icon: 'i-lucide-user-cog', to: '/roles', permission: 'role-list' },
   { separator: true },
-  { label: 'Accounts', icon: 'i-lucide-book-open', to: '/accounts' }
+  { label: 'Accounts', icon: 'i-lucide-book-open', to: '/accounts', permission: 'account-list' }
 ]
 
 const ledgerItems = [
-  { label: 'Journals', icon: 'i-lucide-file-text', to: '/journals' }
+  { label: 'Journals', icon: 'i-lucide-file-text', to: '/journals', permission: 'journal-list' },
+  { label: 'Trial Balance', icon: 'i-lucide-calculator', to: '/trial-balance', permission: 'trialbalance-list' },
+  { label: 'Financial Statements', icon: 'i-lucide-pie-chart', to: '/financial-statements', permission: 'financialstatements-list' }
 ]
 
 const open = ref(false)
@@ -57,15 +59,16 @@ const open = ref(false)
                   <div class="grid gap-1">
                     <template v-for="item in masterItems" :key="item.to">
                       <USeparator v-if="item.separator" />
-                      <UButton
-                        v-else
-                        :to="item.to"
-                        variant="ghost"
-                        color="neutral"
-                        class="justify-start"
-                        :icon="item.icon"
-                        :label="item.label"
-                      />
+                      <template v-else>
+                        <UButton v-if="!item.permission || user && user.permissions.includes(item.permission)"                      
+                          :to="item.to"
+                          variant="ghost"
+                          color="neutral"
+                          class="justify-start"
+                          :icon="item.icon"
+                          :label="item.label"
+                        />
+                      </template>
                     </template>
                   </div>
                 </div>
