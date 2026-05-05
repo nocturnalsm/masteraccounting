@@ -85,6 +85,7 @@ const deleteRole = async (role: any) => {
       :data="roles"
       :loading="pending"
       :page-size="10"
+      @search="(value) => search = value"
       @view="(row) => router.push(`/roles/${row.id}`)"
       @edit="(row) => router.push(`/roles/${row.id}`)"
       @delete="deleteRole"
@@ -102,7 +103,7 @@ const deleteRole = async (role: any) => {
           <UInput name="name" placeholder="e.g. editor, manager" required />
         </FormGroup>
         <FormGroup label="Guard Name">
-          <USelect
+          <USelectMenu
             name="guard_name"
             :options="[
               { label: 'Web', value: 'web' },

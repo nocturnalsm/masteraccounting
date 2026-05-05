@@ -24,16 +24,19 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(['update:page', 'update:sort', 'search', 'view', 'edit', 'delete'])
 
-const shouldShowActionMenu = computed(() => {
-  // Always show on mobile to house View/Edit/Delete
-  // On desktop, only show if the user provided the slot
-  return !!slots['row-action-menu']
+const search = ref('')
+let debounceTimeout: ReturnType<typeof setTimeout> | null = null
+
+watch(search, (newValue) => {
+  if (debounceTimeout) clearTimeout(debounceTimeout)
+
+  debounceTimeout = setTimeout(() => {
+    emit('search', newValue)
+  }, 1000) 
 })
 
-// 1. Toolbar State
-const search = ref('')
-watch(search, (val) => {
-  emit('search', val)
+onUnmounted(() => {
+  if (debounceTimeout) clearTimeout(debounceTimeout)
 })
 
 const currentPage = computed({
@@ -43,10 +46,12 @@ const currentPage = computed({
 
 const getDropdownItems = (row: any) => {
   const items = []
-
+  
   // 1. Default Mobile Actions (Hidden on desktop menu)
   items.push(
-    { label: 'View', icon: 'i-lucide-eye', class: 'md:hidden', onClick: () => emit('view', row) },
+    { label: 'View', icon: 'i-lucide-eye', class: 'md:hidden', onClick: () => {
+      console.log('View row:', row)
+      emit('view', row) }},
     { label: 'Edit', icon: 'i-lucide-pencil', class: 'md:hidden', onClick: () => emit('edit', row) },
     { label: 'Delete', icon: 'i-lucide-trash', class: 'md:hidden text-red-600', onClick: () => emit('delete', row) }
   )
@@ -127,10 +132,11 @@ function getHeader(column: string, label: string) {
 <template>
   <div class="space-y-4">
     <!-- 1. Custom Toolbar Above Table -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-t-lg">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-t-lg">
       <div class="flex flex-1 items-center gap-3">
         <UInput
           v-model="search"
+          size="lg"
           icon="i-lucide-search"
           placeholder="Search..."
           class="max-w-xs w-full"

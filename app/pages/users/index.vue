@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { h, resolveComponent, ref } from 'vue'
+
 definePageMeta({
   middleware: ['auth', 'permission'],
   permissions: ['user-list']
@@ -6,13 +8,41 @@ definePageMeta({
 
 const { get, post, del } = useApi()
 const router = useRouter()
+const { can } = useAuth()
+
+const UBadge = resolveComponent('UBadge')
 
 const columns = [
-  { accessorKey: 'name', header: 'Name', sortable: true },
+  { accessorKey: 'first_name', header: 'First Name', sortable: true },
+  { accessorKey: 'last_name', header: 'Last Name', sortable: true },
   { accessorKey: 'email', header: 'Email', sortable: true },
-  { accessorKey: 'role', header: 'Role', sortable: true },
-  { accessorKey: 'company', header: 'Company', sortable: true }
+  { accessorKey: 'roles', header: 'Role', sortable: false, cell: ({ row }) => {    
+      const roles = row.getValue('roles') ?? []      
+      const badges = roles.map(role =>
+          h(UBadge, {
+            key: role.id,
+            label: role.name,
+            class: 'mr-1'
+          })
+        )
+      return h('div', badges)
+  }}
 ]
+
+if (can('company-list')) {
+  columns.push(
+    { accessorKey: 'companies', header: 'Company', sortable: false, cell: ({ row }) => {    
+      const companies = row.getValue('companies') ?? []      
+      const badges = companies.map(company =>
+          h(UBadge, {
+            key: company.id,
+            label: company.name,
+            class: 'mr-1'
+          })
+        )
+      return h('div', badges)   
+  }})
+}
 
 const page = ref(1)
 const sortBy = ref({ column: 'id', direction: 'desc' as const })
@@ -86,6 +116,7 @@ const deleteUser = async (user: any) => {
       :total="total"
       :loading="pending"
       :page-size="10"
+      @search="(value) => search = value"
       @view="(row) => router.push(`/users/${row.id}`)"
       @edit="(row) => router.push(`/users/${row.id}`)"
       @delete="deleteUser"
@@ -109,7 +140,7 @@ const deleteUser = async (user: any) => {
           <UInput name="password" type="password" placeholder="Secure password" required />
         </FormGroup>
         <FormGroup label="Role">
-          <USelect
+          <USelectMenu
             name="role"
             :options="[
               { label: 'Admin', value: 'admin' },
@@ -119,7 +150,7 @@ const deleteUser = async (user: any) => {
           />
         </FormGroup>
         <FormGroup label="Company">
-          <USelect name="company_id" :options="[]" placeholder="Select company" />
+          <USelectMenu name="company_id" :options="[]" placeholder="Select company" />
         </FormGroup>
       </div>
     </CreateModal>

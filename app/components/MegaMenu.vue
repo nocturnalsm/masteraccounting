@@ -206,7 +206,7 @@ const open = ref(false)
               class="gap-2 rounded-full px-2 py-1"
             >
               <UAvatar
-                :alt="user.name"
+                :alt="user.full_name"
                 size="md"
               />
             </UButton>
@@ -214,7 +214,7 @@ const open = ref(false)
             <template #content>
                 <div class="p-2 w-min-48">
                   <div class="px-3 py-2 mb-2 border-b border-gray-200 dark:border-gray-700">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user.name }}</p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user.full_name }}</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ user.email }}</p>
                   </div>
                   <UButton to="/profile" variant="ghost" class="justify-start w-full" icon="i-lucide-user" label="Profile" />

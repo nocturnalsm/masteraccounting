@@ -16,7 +16,7 @@ const fetchCompany = async () => {
   loading.value = true
   try {
     const response = await get(`/companies/${route.params.id}`)
-    company.value = response.data || {}
+    company.value = response || {}
   } catch (error) {
     console.error('Failed to fetch company:', error)
   } finally {
@@ -51,7 +51,7 @@ onMounted(fetchCompany)
 
 <template>
   <div v-if="loading" class="flex justify-center py-12">
-    <ULoadingIcon />
+    <USkeleton class="w-full" />
   </div>
 
   <ProfileLayout
@@ -116,13 +116,13 @@ onMounted(fetchCompany)
     <template #settings>
       <div class="space-y-4">
         <FormGroup label="Status">
-          <UToggle v-model="company.is_active" />
+          <USwitch v-model="company.is_active" />
         </FormGroup>
         <FormGroup label="Fiscal Year Start">
           <UInput v-model="company.fiscal_year_start" type="date" />
         </FormGroup>
         <FormGroup label="Base Currency">
-          <USelect
+          <USelectMenu
             v-model="company.currency"
             :options="[
               { label: 'USD', value: 'USD' },

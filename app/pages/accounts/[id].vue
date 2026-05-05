@@ -119,7 +119,7 @@ onMounted(fetchAccount)
             <UInput v-model="account.name" />
           </FormGroup>
           <FormGroup label="Account Type" required>
-            <USelect v-model="account.type" :options="accountTypes" />
+            <USelectMenu v-model="account.type" :options="accountTypes" />
           </FormGroup>
           <FormGroup label="Category">
             <UInput v-model="account.category" placeholder="e.g. Current Asset" />
@@ -166,13 +166,13 @@ onMounted(fetchAccount)
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Account Settings</h3>
         <div class="space-y-4">
           <FormGroup label="Status">
-            <UToggle v-model="account.is_active" />
+            <USwitch v-model="account.is_active" />
           </FormGroup>
           <FormGroup label="Allow Direct Posting">
-            <UToggle v-model="account.allow_direct_posting" />
+            <USwitch v-model="account.allow_direct_posting" />
           </FormGroup>
           <FormGroup label="Reconciliation Account">
-            <UToggle v-model="account.is_reconciliation" />
+            <USwitch v-model="account.is_reconciliation" />
           </FormGroup>
         </div>
       </div>

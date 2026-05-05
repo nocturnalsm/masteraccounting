@@ -121,7 +121,7 @@ onMounted(() => {
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Guard Name</label>
-          <USelect
+          <USelectMenu
             v-model="permission.guard_name"
             :options="[
               { label: 'Web', value: 'web' },

@@ -162,7 +162,7 @@ onMounted(fetchJournal)
             <UInput v-model="journal.reference" />
           </FormGroup>
           <FormGroup label="Status">
-            <USelect
+            <USelectMenu
               v-model="journal.status"
               :options="[
                 { label: 'Draft', value: 'draft' },

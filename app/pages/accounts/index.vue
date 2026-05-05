@@ -10,7 +10,6 @@ const columns = [
   { accessorKey: 'code', header: 'Code', sortable: true },
   { accessorKey: 'name', header: 'Name', sortable: true },
   { accessorKey: 'type', header: 'Type', sortable: true },
-  { accessorKey: 'category', header: 'Category', sortable: true },
   { accessorKey: 'balance', header: 'Balance', sortable: true },
 ]
 
@@ -94,6 +93,7 @@ const deleteAccount = async (account: any) => {
       :data="accounts"
       :page-size="10"
       :loading="pending"
+      @search="(value) => search = value" 
       @view="(row) => router.push(`/accounts/${row.id}`)"
       @edit="(row) => router.push(`/accounts/${row.id}`)"
       @delete="deleteAccount"
@@ -114,10 +114,7 @@ const deleteAccount = async (account: any) => {
           <UInput name="name" placeholder="e.g. Cash" required />
         </FormGroup>
         <FormGroup label="Account Type" required>
-          <USelect name="type" :options="accountTypes" required />
-        </FormGroup>
-        <FormGroup label="Category">
-          <UInput name="category" placeholder="e.g. Current Asset" />
+          <USelectMenu name="type" :options="accountTypes" required />
         </FormGroup>
         <FormGroup label="Description">
           <UTextarea name="description" placeholder="Account description" />

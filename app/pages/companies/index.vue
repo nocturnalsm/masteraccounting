@@ -96,8 +96,10 @@ const deleteCompany = async (company: any) => {
       :loading="pending"
       :total="total"
       :page-size="10"
-      @update:sort="(sort) => sortBy = sort"
       @search="(val) => search = val"
+      @view="(row) => router.push(`/companies/${row.id}`)"
+      @edit="(row) => router.push(`/companies/${row.id}`)"
+
     >
       <template #row-action-menu="{ row }">
         <div class="flex items-center gap-2 w-full" @click="toggleStatus(row)">

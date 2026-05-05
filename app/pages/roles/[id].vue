@@ -124,7 +124,7 @@ onMounted(() => {
           <UInput v-model="role.name" placeholder="Role name" />
         </FormGroup>
         <FormGroup label="Guard Name">
-          <USelect
+          <USelectMenu
             v-model="role.guard_name"
             :options="[
               { label: 'Web', value: 'web' },
