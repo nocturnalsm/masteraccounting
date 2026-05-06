@@ -206,6 +206,7 @@ const open = ref(false)
               class="gap-2 rounded-full px-2 py-1"
             >
               <UAvatar
+                :src="user.avatar_url"
                 :alt="user.full_name"
                 size="md"
               />

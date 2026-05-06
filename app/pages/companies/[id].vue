@@ -3,21 +3,32 @@ definePageMeta({
   middleware: 'auth'
 })
 
-
 const route = useRoute()
 const router = useRouter()
-const { get, put, del } = useApi()
+const { get, put, del, post } = useApi()
+const toast = useToast()
 
 const company = ref<any>({})
 const loading = ref(false)
 const saveLoading = ref(false)
-const logoFile =ref(null)
+const logo = ref(null)
+
+const formState = reactive({
+    name: '',
+    slug: '',
+    logo_url: ''
+})
 
 const fetchCompany = async () => {
   loading.value = true
   try {
     const response = await get(`/companies/${route.params.id}`)
     company.value = response || {}
+    Object.assign(formState, {
+        name: company.value.name,
+        slug: company.value.slug,
+        logo_url: company.value.logo_url
+    })
   } catch (error) {
     console.error('Failed to fetch company:', error)
   } finally {
@@ -28,10 +39,25 @@ const fetchCompany = async () => {
 const saveCompany = async () => {
   saveLoading.value = true
   try {
-    await put(`/companies/${route.params.id}`, company.value)
+    await put(`/companies/${route.params.id}`, formState)
+    if (logo.value){
+      const fd = new FormData()
+      fd.append('logo', logo.value)
+      await post(`/companies/${route.params.id}/logo`, fd)
+      logo.value = null
+    }
+    toast.add({
+      title: 'Success',
+      description: 'Update was completed successfully.',
+      color: 'success'
+    })
     await fetchCompany()
   } catch (error) {
-    console.error('Failed to save company:', error)
+    toast.add({
+      title: 'Error',
+      description: `Failed to save company: ${error.response?._data.message}`,
+      color: 'error'
+    })
   } finally {
     saveLoading.value = false
   }
@@ -50,13 +76,9 @@ const deleteCompany = async () => {
 onMounted(fetchCompany)
 </script>
 
-<template>
-  <div v-if="loading" class="flex justify-center py-12">
-    <USkeleton class="w-full" />
-  </div>
+<template>  
 
   <ProfileLayout
-    v-else
     :title="company.name || 'Company Details'"
     back-to="/companies"
     @save="saveCompany"
@@ -98,15 +120,14 @@ onMounted(fetchCompany)
     <template #details>
       <div class="space-y-4">        
         <FormGroup label="Company Name" required>
-          <UInput size="lg" class="w-full" v-model="company.name" placeholder="Company name" />
+          <UInput size="lg" class="w-full" v-model="formState.name" placeholder="Company name" />
         </FormGroup>
         <FormGroup label="Company Code" required>
-          <UInput size="lg" v-model="company.code" placeholder="Company code" />
+          <UInput size="lg" v-model="formState.slug" placeholder="Company code" />
         </FormGroup>
         <AvatarUpload 
-          v-model="logoFile"
-          :current-image-url="company.logo_url"
-          field-name="logo"
+          v-model="formState.logo_url"
+          @file-selected="(file) => logo = file"
           label="Company Logo"
         />
       </div>

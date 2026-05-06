@@ -24,7 +24,7 @@ useSeoMeta({
 </script>
 
 <template>
-  <UApp>
+  <UApp :toaster="{ position: 'top-right' }">
     <UMain>
       <NuxtLayout>
         <NuxtPage />

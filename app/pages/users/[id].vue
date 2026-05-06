@@ -4,21 +4,43 @@ definePageMeta({
 })
 
 const { can } = useAuth()
+const toast = useToast()
 const route = useRoute()
 const router = useRouter()
-const { get, put, del } = useApi()
+const { get, put, del, post } = useApi()
 
 const user = ref<any>({})
 const roleList = ref<any[]>([])
 const companyList = ref<any[]>([])  
 const loading = ref(false)
 const saveLoading = ref(false)
+const avatar = ref(null)
+
+const formState = reactive({
+    first_name: '',
+    last_name: '',
+    email: '',
+    title: '',
+    roles: [],
+    companies: [],
+    avatar_url: ''
+})
 
 const fetchUser = async () => {
   loading.value = true
   try {
     const response = await get(`/users/${route.params.id}`)
     user.value = response || {}
+
+    Object.assign(formState, {
+        first_name: user.value.first_name,
+        last_name: user.value.last_name,
+        email: user.value.email,
+        title: user.value.title,
+        roles: user.value.roles,
+        companies: user.value.companies,
+        avatar_url: user.value.avatar_url
+    })
   } catch (error) {
     console.error('Failed to fetch user:', error)
   } finally {
@@ -29,10 +51,7 @@ const fetchUser = async () => {
 const fetchRoles = async () => {
   try {
     const response = await get('/roles')
-    roleList.value = response.data.map(role => ({
-      label: role.name,
-      value: role.id
-    })) || []
+    roleList.value = response.data
   } catch (error) {
     console.error('Failed to fetch roles:', error)
   }
@@ -41,10 +60,7 @@ const fetchRoles = async () => {
 const fetchCompanies = async () => {
   try {
     const response = await get('/companies')
-    companyList.value = response.data.map(company => ({
-      label: company.name,
-      value: company.id
-    })) || []
+    companyList.value = response.data
   } catch (error) {
     console.error('Failed to fetch companies:', error)
   }
@@ -53,11 +69,28 @@ const fetchCompanies = async () => {
 const saveUser = async () => {
   saveLoading.value = true
   try {
-    await put(`/users/${route.params.id}`, user.value)
+    await put(`/users/${route.params.id}`, formState)
+    console.log(avatar.value)
+    if (avatar.value){
+      const fd = new FormData()
+      fd.append('avatar', avatar.value)
+      await post(`/users/${route.params.id}/avatar`, fd)
+      avatar.value = null
+    }
+    toast.add({
+      title: 'Success',
+      description: 'Update was completed successfully.',
+      color: 'success'
+    })
     await fetchUser()
   } catch (error) {
-    console.error('Failed to save user:', error)
-  } finally {
+    toast.add({
+      title: 'Error',
+      description: `Failed to save user: ${error.response?._data.message}`,
+      color: 'error'
+    })
+  } 
+  finally {
     saveLoading.value = false
   }
 }
@@ -73,21 +106,20 @@ const deleteUser = async () => {
 }
 
 onMounted(async () => {
-  await Promise.all([
-    fetchUser(),
-    fetchRoles(),
-    fetchCompanies()
-  ])
+  await fetchRoles(),
+  await fetchCompanies()
+  await fetchUser()
 })
+
+const handleSelectFile = file => {
+    console.log(file)
+    avatar.value = file
+}
+
 </script>
 
 <template>
-  <div v-if="loading" class="flex justify-center py-12">
-    <USkeleton class="w-full" />
-  </div>
-
   <ProfileLayout
-    v-else
     :title="user.name || 'User Details'"
     back-to="/users"
     @save="saveUser"
@@ -100,7 +132,7 @@ onMounted(async () => {
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-            {{ user.name }}
+            {{ user.full_name }}
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ user.email }}
@@ -132,38 +164,55 @@ onMounted(async () => {
     </template>
 
     <template #details>
-      <div class="space-y-4">
-        <div class="block lg:flex gap-x-4 space-y-4 lg:space-y-0">
-          <FormGroup label="First Name" required>
-            <UInput class="w-full"size="lg" v-model="user.first_name" placeholder="First name" />
+      <UForm :state="formState">
+        <div class="space-y-4">        
+          <div class="block lg:flex gap-x-4 space-y-4 lg:space-y-0">
+            <FormGroup label="First Name" required>
+              <UInput class="w-full"size="lg" v-model="formState.first_name" placeholder="First name" />
+            </FormGroup>
+            <FormGroup label="Last Name" required>
+              <UInput class="w-full"size="lg" v-model="formState.last_name" placeholder="Last name" />
+            </FormGroup>
+          </div>
+          <div class="block lg:flex gap-x-4 space-y-4 lg:space-y-0">
+            <FormGroup label="Email" required>
+              <UInput class="w-full"size="lg" v-model="formState.email" type="email" placeholder="user@example.com" />
+            </FormGroup>
+            <FormGroup label="Title">
+              <UInput class="w-full"size="lg" v-model="formState.title" placeholder="Title" />
+            </FormGroup>
+          </div>
+          <FormGroup label="Role">
+            <USelectMenu
+              :multiple="true"
+              v-model="formState.roles"
+              size="lg"
+              class="w-full"
+              by="id"
+              :items="roleList"
+              placeholder="Select role"
+              label-key="name"
+            />
           </FormGroup>
-          <FormGroup label="Last Name" required>
-            <UInput class="w-full"size="lg" v-model="user.last_name" placeholder="Last name" />
+          <FormGroup v-if="can('company-list')" label="Company">
+            <USelectMenu 
+              :multiple="true"
+              v-model="formState.companies"
+              class="w-full" 
+              size="lg" 
+              by="id"
+              :items="companyList" 
+              placeholder="Select company" 
+              label-key="name"
+            />
           </FormGroup>
-        </div>
-        <div class="block lg:flex gap-x-4 space-y-4 lg:space-y-0">
-          <FormGroup label="Email" required>
-            <UInput class="w-full"size="lg" v-model="user.email" type="email" placeholder="user@example.com" />
-          </FormGroup>
-          <FormGroup label="Title">
-            <UInput class="w-full"size="lg" v-model="user.title" placeholder="Title" />
-          </FormGroup>
-        </div>
-        <FormGroup label="Role">
-          <USelectMenu
-            multiple
-            size="lg"
-            class="w-full"
-            v-model="user.roles"
-            :items="roleList"
-            value-key="id"
-            placeholder="Select role"
+          <AvatarUpload 
+            v-model="formState.avatar_url"
+            @file-selected="handleSelectFile"
+            label="User Avatar"
           />
-        </FormGroup>
-        <FormGroup v-if="can('company-list')" label="Company">
-          <USelectMenu multiple value-key="id" class="w-full" size="lg" v-model="user.companies" :items="companyList" placeholder="Select company" />
-        </FormGroup>
-      </div>
+        </div>
+      </UForm>
     </template>
 
     <template #settings>
