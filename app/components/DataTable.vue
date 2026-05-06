@@ -22,7 +22,7 @@ const props = withDefaults(defineProps<Props>(), {
   total: 0
 })
 
-const emit = defineEmits(['update:page', 'update:sort', 'search', 'view', 'edit', 'delete'])
+const emit = defineEmits(['update:page', 'update:sort', 'search', 'edit', 'delete'])
 
 const search = ref('')
 let debounceTimeout: ReturnType<typeof setTimeout> | null = null
@@ -49,9 +49,6 @@ const getDropdownItems = (row: any) => {
   
   // 1. Default Mobile Actions (Hidden on desktop menu)
   items.push(
-    { label: 'View', icon: 'i-lucide-eye', class: 'md:hidden', onClick: () => {
-      console.log('View row:', row)
-      emit('view', row) }},
     { label: 'Edit', icon: 'i-lucide-pencil', class: 'md:hidden', onClick: () => emit('edit', row) },
     { label: 'Delete', icon: 'i-lucide-trash', class: 'md:hidden text-red-600', onClick: () => emit('delete', row) }
   )
@@ -171,7 +168,6 @@ function getHeader(column: string, label: string) {
           
           <!-- Desktop Inline Buttons -->
           <div class="hidden md:flex items-center gap-1">
-            <UButton variant="ghost" color="neutral" icon="i-lucide-eye" size="sm" @click="emit('view', row)" />
             <UButton variant="ghost" color="neutral" icon="i-lucide-pencil" size="sm" @click="emit('edit', row)" />
             <UButton variant="ghost" color="error" icon="i-lucide-trash" size="sm" @click="emit('delete', row)" />
           </div>

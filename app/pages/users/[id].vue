@@ -95,8 +95,8 @@ onMounted(async () => {
   >
     <template #summary>
       <div class="text-center space-y-4">
-        <div class="w-20 h-20 mx-auto bg-primary-100 dark:bg-primary-900/20 rounded-full flex items-center justify-center">
-          <UIcon name="i-lucide-user" class="w-10 h-10 text-primary-600 dark:text-primary-400" />
+        <div class="w-20 h-20 mx-auto rounded-full flex items-center justify-center">
+          <UAvatar :src="user.avatar_url" :alt="user.full_name" class="w-full h-full" size="2xl" color="primary" />
         </div>
         <div>
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">

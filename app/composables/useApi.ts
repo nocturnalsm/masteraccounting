@@ -6,14 +6,21 @@ export const useApi = () => {
     baseURL: config.public.apiBase,
     headers: {
       Accept: 'application/json',
-      'Content-Type': 'application/json'
     },
     onRequest({ options }) {
+
+      const headers = new Headers(options.headers)
+
       if (token) {
-        const headers = new Headers(options.headers)
         headers.set('Authorization', `Bearer ${token}`)
-        options.headers = headers
       }
+
+      if (!(options.body instanceof FormData)) {
+        headers.set('Content-Type', 'application/json')
+      } 
+      // Note: If it IS FormData, we leave Content-Type empty 
+      // so the browser sets 'multipart/form-data; boundary=...'
+      options.headers = headers
     },
 
     onResponseError({ response }) {
@@ -26,7 +33,15 @@ export const useApi = () => {
 
   const get = (url: string, options = {}) => apiFetch(url, { method: 'GET', ...options })
   const post = (url: string, body?: any, options = {}) => apiFetch(url, { method: 'POST', body, ...options })
-  const put = (url: string, body?: any, options = {}) => apiFetch(url, { method: 'PUT', body, ...options })
+  
+  const put = (url: string, body?: any, options = {}) => {
+     if (body instanceof FormData) {
+       body.append('_method', 'PUT')
+       return apiFetch(url, { method: 'POST', body, ...options })
+     }
+     return apiFetch(url, { method: 'PUT', body, ...options })
+  }
+  
   const del = (url: string, options = {}) => apiFetch(url, { method: 'DELETE', ...options })
 
   return {
