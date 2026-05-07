@@ -127,95 +127,98 @@ function getHeader(column: string, label: string) {
 </script>
 
 <template>
-  <div class="space-y-4">
-    <!-- 1. Custom Toolbar Above Table -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 rounded-t-lg">
-      <div class="flex flex-1 items-center gap-3">
-        <UInput
-          v-model="search"
-          size="lg"
-          icon="i-lucide-search"
-          placeholder="Search..."
-          class="max-w-xs w-full"
-        />
-        <!-- Custom Filters Slot -->
-        <div class="flex items-center gap-2">
-          <slot name="filters" />
-        </div>
-      </div>
-
-      <!-- Custom Actions/Buttons Slot -->
-      <div class="flex items-center gap-2">
-        <slot name="toolbar-actions" />
-      </div>
-    </div>
-
-    <!-- Table -->
-    <UTable
-      :data="data"
-      :columns="computedColumns"
-      :loading="loading"
-      class="w-full"
-      :ui="{ th: { base: 'group' } }"
-    >
-      <!-- Forward all dynamic cell slots -->
-      <template v-for="(_, name) in $slots" #[name]="slotData">
-        <slot v-if="name !== 'actions-cell' && name !== 'row-action-menu'" :name="name" v-bind="slotData" />
-      </template>
-
-      <template #actions-cell="{ row }">
-        <div class="flex items-center justify-start gap-2">
-          
-          <!-- Desktop Inline Buttons -->
-          <div class="hidden md:flex items-center gap-1">
-            <UButton variant="ghost" color="neutral" icon="i-lucide-pencil" size="sm" @click="emit('edit', row)" />
-            <UButton variant="ghost" color="error" icon="i-lucide-trash" size="sm" @click="emit('delete', row)" />
+  <UCard>
+    <div class="space-y-4">
+      <!-- 1. Custom Toolbar Above Table -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between rounded-t-lg">
+        <div class="flex flex-1 items-center">
+          <UInput
+            v-model="search"
+            size="lg"
+            icon="i-lucide-search"
+            placeholder="Search..."
+            class="max-w-xs w-full"
+          />
+          <!-- Custom Filters Slot -->
+          <div class="flex items-center gap-2">
+            <slot name="filters" />
           </div>
-
-          <UDropdownMenu 
-            :items="getDropdownItems(row)" 
-            :popper="{ placement: 'bottom-end' }"
-            :class="[!$slots['row-action-menu'] ? 'md:hidden' : '']"
-          >
-            <UButton color="neutral" variant="ghost" icon="i-lucide-more-vertical" />
-            
-            <template #item="{ item }">
-              <!-- RENDER: Manual Divider (Mobile Only)[cite: 1] -->
-              <div 
-                v-if="item.isDivider" 
-                :class="['h-[2px] bg-gray-200 dark:bg-gray-700 my-1 -mx-1', item.class]" 
-              />
-
-              <!-- RENDER: Default Actions (Mobile Only)[cite: 1] -->
-              <div 
-                v-else-if="item.onClick" 
-                :class="['flex items-center gap-2 w-full px-2 py-1.5', item.class]"
-                @click="item.onClick"
-              >
-                <UIcon :name="item.icon" class="h-4 w-4" />
-                <span>{{ item.label }}</span>
-              </div>
-
-              <div v-else-if="item.isCustom" class="w-full">
-                <slot name="row-action-menu" :row="row" />
-              </div>
-            </template>
-          </UDropdownMenu>
         </div>
-      </template>
-    </UTable>
 
-    <!-- Footer: Pagination -->
-    <div class="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-gray-700">
-      <div class="text-sm text-gray-500">
-        Showing {{ data.length }} of {{ total }} results
+        <!-- Custom Actions/Buttons Slot -->
+        <div class="flex items-center gap-2">
+          <slot name="toolbar-actions" />
+        </div>
       </div>
-      <UPagination
-        v-model:page="currentPage"
-        :total="total"
-        :items-per-page="pageSize"
-      />
+
+      <!-- Table -->
+      <UTable
+        :data="data"
+        :columns="computedColumns"
+        :loading="loading"
+        class="w-full border-t border-gray-200 dark:border-gray-700"
+        :ui="{ th: { base: 'group' } }"
+      >
+        <!-- Forward all dynamic cell slots -->
+        <template v-for="(_, name) in $slots" #[name]="slotData">
+          <slot v-if="name !== 'actions-cell' && name !== 'row-action-menu'" :name="name" v-bind="slotData" />
+        </template>
+
+        <template #actions-cell="{ row }">
+          <div class="flex items-center justify-start gap-2">
+            
+            <!-- Desktop Inline Buttons -->
+            <div class="hidden md:flex items-center gap-1">
+              <UButton variant="ghost" color="neutral" icon="i-lucide-pencil" size="sm" @click="emit('edit', row)" />
+              <UButton variant="ghost" color="error" icon="i-lucide-trash" size="sm" @click="emit('delete', row)" />
+            </div>
+
+            <UDropdownMenu 
+              :items="getDropdownItems(row)" 
+              :popper="{ placement: 'bottom-end' }"
+              :class="[!$slots['row-action-menu'] ? 'md:hidden' : '']"
+            >
+              <UButton color="neutral" variant="ghost" icon="i-lucide-more-vertical" />
+              
+              <template #item="{ item }">
+                <!-- RENDER: Manual Divider (Mobile Only)[cite: 1] -->
+                <div 
+                  v-if="item.isDivider" 
+                  :class="['h-[2px] bg-gray-200 dark:bg-gray-700 my-1 -mx-1', item.class]" 
+                />
+
+                <!-- RENDER: Default Actions (Mobile Only)[cite: 1] -->
+                <div 
+                  v-else-if="item.onClick" 
+                  :class="['flex items-center gap-2 w-full px-2 py-1.5', item.class]"
+                  @click="item.onClick"
+                >
+                  <UIcon :name="item.icon" class="h-4 w-4" />
+                  <span>{{ item.label }}</span>
+                </div>
+
+                <div v-else-if="item.isCustom" class="w-full">
+                  <slot name="row-action-menu" :row="row" />
+                </div>
+              </template>
+            </UDropdownMenu>
+          </div>
+        </template>
+      </UTable>
+
+      <!-- Footer: Pagination -->
+      <div class="block space-y-2 text-center md:flex items-center justify-between px-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+        <div class="text-sm text-gray-500">
+          Showing {{ data.length }} of {{ total }} results
+        </div>
+        <UPagination
+          class="mx-auto flex justify-center md:mx-0 md:justify-end"
+          v-model:page="currentPage"
+          :total="total"
+          :items-per-page="pageSize"
+        />
+      </div>
     </div>
-  </div>
+  </UCard>
 </template>
 

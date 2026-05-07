@@ -6,49 +6,72 @@ interface ThemeConfig {
   background?: string
 }
 
-export const useTheme = () => {
-  const theme = ref<ThemeConfig>({
-    primary: '#3b82f6',
-    secondary: '#10b981',
-    gray: '#6b7280',
-    background: 'bg-gradient-1'
-  })
+const theme = ref<ThemeConfig>({
+    primary: '#0ea5e9',
+    secondary: '#737373',
+    gray: '#64748b',    background: 'bg-gradient-1'
+})
 
-  const ui = useNuxtApp().$ui
+
+export const useTheme = () => {
+  
+  // FIX: Access appConfig instead of $ui
+  const appConfig = useAppConfig()
+
+  const injectFullScale = (key: string, baseHex: string) => {
+    const el = document.documentElement
+    // Define the steps Tailwind expects
+    const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900]
+    
+    steps.forEach((step) => {
+      let color
+      if (step < 500) {
+        // Lighten for lower steps (50-400)
+        const percent = (500 - step) / 500
+        color = lightenColor(baseHex, percent * 0.8)
+      } else if (step > 500) {
+        // Darken for higher steps (600-900)
+        const percent = (step - 500) / 500
+        color = darkenColor(baseHex, percent * 0.4)
+      } else {
+        color = baseHex
+      }
+      
+      const rgb = hexToRgb(color)
+      console.log(rgb)
+      if (rgb){
+        const rgbValue = `${rgb.r}, ${rgb.g}, ${rgb.b}`
+        el.style.setProperty(`--color-${key}-${step}`, rgbValue)
+      }
+    })
+
+    const rgbUi = hexToRgb(baseHex)
+    console.log(rgbUi)
+    const rgbUiValue = `${rgbUi.r}, ${rgbUi.g}, ${rgbUi.b}`
+    
+    el.style.setProperty(`--color-${key}`, rgbUiValue)
+  }
 
   const updateTheme = (config: Partial<ThemeConfig>) => {
-    // Merge new config
     Object.assign(theme.value, config)
     
-    // Update CSS variables for immediate effect
     if (config.primary) {
-      document.documentElement.style.setProperty('--color-primary', config.primary)
-      document.documentElement.style.setProperty('--color-primary-500', config.primary)
-      // Generate variants
-      document.documentElement.style.setProperty('--color-primary-50', lightenColor(config.primary, 0.95))
-      document.documentElement.style.setProperty('--color-primary-600', darkenColor(config.primary, 0.1))
+      injectFullScale('primary', config.primary)
+      appConfig.ui.primary = 'primary'
     }
     
     if (config.secondary) {
-      document.documentElement.style.setProperty('--color-secondary', config.secondary)
-    }
-    
-    if (config.gray) {
-      const grayShades = generateGrayShades(config.gray)
-      Object.entries(grayShades).forEach(([key, value]) => {
-        document.documentElement.style.setProperty(`--color-gray-${key}`, value)
-      })
-    }
-    
-    if (config.background) {
-      document.documentElement.className = config.background
+      injectFullScale('secondary', config.secondary)
+      appConfig.ui.secondary = 'secondary'
     }
 
-    // Update Nuxt UI theme configuration
-    ui.config.colors = {
-      primary: `var(--color-primary, ${theme.value.primary})`,
-      secondary: `var(--color-secondary, ${theme.value.secondary})`,
-      gray: `var(--color-gray-500, ${theme.value.gray})`
+    if (config.gray) {
+      injectFullScale('gray', config.gray)
+      appConfig.ui.gray = 'gray'
+    }
+
+    if (config.background) {
+      theme.value.background = config.background
     }
   }
 
@@ -61,17 +84,17 @@ export const useTheme = () => {
   }
 
   const saveTheme = () => {
-    localStorage.setItem('custom-theme', JSON.stringify(theme.value))
+    //localStorage.setItem('custom-theme', JSON.stringify(theme.value))
   }
 
   const resetTheme = () => {
     updateTheme({
-      primary: '#3b82f6',
-      secondary: '#10b981',
-      gray: '#6b7280',
+      primary: '#0ea5e9',
+      secondary: '#737373',
+      gray: '#64748b',
       background: 'bg-gradient-1'
     })
-    localStorage.removeItem('custom-theme')
+    //localStorage.removeItem('custom-theme')
   }
 
   // Color utilities
@@ -85,26 +108,29 @@ export const useTheme = () => {
   }
 
   const rgbToHex = (r: number, g: number, b: number) => {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)
+    const toHex = (c: number) => c.toString(16).padStart(2, '0')
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`
   }
 
   const lightenColor = (hex: string, percent: number) => {
     const rgb = hexToRgb(hex)
     if (!rgb) return hex
+    // Use Math.round to ensure integers
     return rgbToHex(
-      Math.min(255, rgb.r + (255 - rgb.r) * percent),
-      Math.min(255, rgb.g + (255 - rgb.g) * percent),
-      Math.min(255, rgb.b + (255 - rgb.b) * percent)
+      Math.round(Math.min(255, rgb.r + (255 - rgb.r) * percent)),
+      Math.round(Math.min(255, rgb.g + (255 - rgb.g) * percent)),
+      Math.round(Math.min(255, rgb.b + (255 - rgb.b) * percent))
     )
   }
 
   const darkenColor = (hex: string, percent: number) => {
     const rgb = hexToRgb(hex)
     if (!rgb) return hex
+    // Use Math.round to ensure integers
     return rgbToHex(
-      Math.max(0, rgb.r - (rgb.r * percent)),
-      Math.max(0, rgb.g - (rgb.g * percent)),
-      Math.max(0, rgb.b - (rgb.b * percent))
+      Math.round(Math.max(0, rgb.r - (rgb.r * percent))),
+      Math.round(Math.max(0, rgb.g - (rgb.g * percent))),
+      Math.round(Math.max(0, rgb.b - (rgb.b * percent)))
     )
   }
 

@@ -1,22 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-@theme static {
-  --font-sans: 'Public Sans', sans-serif;
-
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
-  --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
-}
-
 /* Custom background patterns */
 .bg-gradient-1 {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -42,4 +26,60 @@
   background-image: 
     linear-gradient(90deg, transparent 49%, #667eea 49%, #667eea 51%, transparent 51%);
   background-size: 20px 100%;
+}
+
+@theme {
+
+  --color-primary: oklch(68.5% 0.169 237.323);
+  --color-primary-50: oklch(97.7% 0.013 236.62);
+  --color-primary-100: oklch(95.1% 0.026 236.824);
+  --color-primary-200: oklch(90.1% 0.058 230.902);
+  --color-primary-300: oklch(82.8% 0.111 230.318);
+  --color-primary-400: oklch(74.6% 0.16 232.661);
+  --color-primary-500: oklch(68.5% 0.169 237.323);
+  --color-primary-600: oklch(58.8% 0.158 241.966);
+  --color-primary-700: oklch(50% 0.134 242.749);
+  --color-primary-800: oklch(44.3% 0.11 240.79);
+  --color-primary-900: oklch(39.1% 0.09 240.876);
+  --color-primary-950: oklch(29.3% 0.066 243.157);
+
+  --color-secondary: oklch(55.6% 0 0);
+  --color-secondary-50: oklch(98.5% 0 0);
+  --color-secondary-100: oklch(97% 0 0);
+  --color-secondary-200: oklch(92.2% 0 0);
+  --color-secondary-300: oklch(87% 0 0);
+  --color-secondary-400: oklch(70.8% 0 0);
+  --color-secondary-500: oklch(55.6% 0 0);
+  --color-secondary-600: oklch(43.9% 0 0);
+  --color-secondary-700: oklch(37.1% 0 0);
+  --color-secondary-800: oklch(26.9% 0 0);
+  --color-secondary-900: oklch(20.5% 0 0);
+  --color-secondary-950: oklch(14.5% 0 0);
+
+  --color-gray: oklch(55.4% 0.046 257.417);
+  --color-gray-50: oklch(98.4% 0.003 247.858);
+  --color-gray-100: oklch(96.8% 0.007 247.896);
+  --color-gray-200: oklch(92.9% 0.013 255.508);
+  --color-gray-300: oklch(86.9% 0.022 252.894);
+  --color-gray-400: oklch(70.4% 0.04 256.788);
+  --color-gray-500: oklch(55.4% 0.046 257.417);
+  --color-gray-600: oklch(44.6% 0.043 257.281);
+  --color-gray-700: oklch(37.2% 0.044 257.287);
+  --color-gray-800: oklch(27.9% 0.041 260.031);
+  --color-gray-900: oklch(20.8% 0.042 265.755);
+  --color-gray-950: oklch(12.9% 0.042 264.695);
+
+  --font-sans: 'Public Sans', sans-serif;
+
+  --color-green-50: #EFFDF5;
+  --color-green-100: #D9FBE8;
+  --color-green-200: #B3F5D1;
+  --color-green-300: #75EDAE;
+  --color-green-400: #00DC82;
+  --color-green-500: #00C16A;
+  --color-green-600: #00A155;
+  --color-green-700: #007F45;
+  --color-green-800: #016538;
+  --color-green-900: #0A5331;
+  --color-green-950: #052E16;
 }

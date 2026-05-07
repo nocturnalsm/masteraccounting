@@ -1,9 +1,10 @@
 <script setup lang="ts">
   const { user } = useAuth()
+  const { theme } = useTheme()
 </script>
 
 <template>
-  <div v-if="user" class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div v-if="user" :class="theme.background" class="min-h-screen">
     <MegaMenu />
     <main class="p-6">
       <NuxtPage />

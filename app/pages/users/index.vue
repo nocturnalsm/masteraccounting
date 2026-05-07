@@ -20,7 +20,7 @@ const columns = [
       h(UAvatar, {
         src: avatar,
         alt: row.original.full_name,
-        class: 'w-10 h-10 rounded-full object-cover'
+        class: 'w-10 h-10 rounded-full'
       })
     ])
   }},
@@ -104,8 +104,8 @@ const deleteUser = async (user: any) => {
 </script>
 
 <template>
-  <div class="space-y-6">
-    <div class="flex items-center justify-between">
+  <div class="space-y-4">
+    <div class="block space-y-2 md:space-y-0 text-center md:text-start md:flex items-center justify-between">
       <div>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Users</h1>
         <p class="text-gray-600 dark:text-gray-400">Manage system users</p>

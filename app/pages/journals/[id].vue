@@ -149,7 +149,7 @@ onMounted(fetchJournal)
     </template>
 
     <template #details>
-      <div class="space-y-6">
+      <div class="space-y-4">
         <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Journal Information</h3>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormGroup label="Journal Number" required>
@@ -179,7 +179,7 @@ onMounted(fetchJournal)
     </template>
 
     <template #entries>
-      <div class="space-y-6">
+      <div class="space-y-4">
         <div class="flex items-center justify-between">
           <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Journal Entries</h3>
           <UButton

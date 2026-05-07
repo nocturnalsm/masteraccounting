@@ -6,36 +6,13 @@
         <!-- Header -->
         <UCard class="mb-8">
           <template #header>
-            <h1 class="text-3xl font-bold text-primary">
+            <h1 class="text-3xl font-bold text-secondary-300">
               🎨 Theme Customizer
             </h1>
-          </template>
-          <p class="text-gray-600">
-            Live theme customization for your Nuxt UI app with UApp.
-          </p>
+          </template>          
         </UCard>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <!-- Primary Colors -->
-          <UCard>
-            <template #header>
-              <h2 class="text-xl font-semibold">Primary Colors</h2>
-            </template>
-            <div class="space-y-4">
-              <div v-for="color in primaryColors" :key="color.name" class="flex items-center space-x-3">
-                <UButton
-                  :color="color.name as any"
-                  variant="ghost"
-                  size="sm"
-                  @click="setPrimaryColor(color.name)"
-                  class="w-12 h-12 rounded-lg shadow-md hover:shadow-lg"
-                >
-                  <span class="w-6 h-6 bg-current rounded-full" />
-                </UButton>
-                <span class="font-medium">{{ color.label }}</span>
-              </div>
-            </div>
-          </UCard>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">          
 
           <!-- Backgrounds -->
           <UCard>
@@ -64,47 +41,47 @@
             <template #header>
               <h2 class="text-xl font-semibold">Custom Colors</h2>
             </template>
-            <div class="space-y-6">
+            <div class="space-y-4">
               <div>
                 <label class="block text-sm font-medium mb-3">Primary</label>
                 <div class="flex items-center space-x-3 mb-3">
-                  <div class="w-10 h-10 rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.primary }" />
-                  <code class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ theme.primary }}</code>
-                </div>
-                <UColorPicker
-                  v-model="primaryColor"
-                  @update:model-value="updatePrimaryColor"
-                  :presets="colorPresets"
-                  mode="click"
-                />
+                  <div class="w-10 h-10 flex items-center justify-center rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.primary }">
+                    <input type="color"
+                      v-model="primaryColor"
+                      @update:model-value="updatePrimaryColor"
+                      class="w-12 h-12 opacity-0"
+                    />
+                  </div>
+                  <code class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">{{ theme.primary }}</code>
+                </div>                
               </div>
 
               <div>
                 <label class="block text-sm font-medium mb-3">Secondary</label>
                 <div class="flex items-center space-x-3 mb-3">
-                  <div class="w-10 h-10 rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.secondary }" />
-                  <code class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ theme.secondary }}</code>
-                </div>
-                <UColorPicker
-                  v-model="secondaryColor"
-                  @update:model-value="updateSecondaryColor"
-                  :presets="colorPresets"
-                  mode="click"
-                />
+                  <div class="w-10 h-10 rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.secondary }">
+                    <input type="color"
+                      v-model="secondaryColor"
+                      @update:model-value="updateSecondaryColor"
+                      class="w-12 h-12 opacity-0"
+                    />
+                  </div>
+                  <code class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">{{ theme.secondary }}</code>
+                </div>                
               </div>
 
               <div>
                 <label class="block text-sm font-medium mb-3">Gray</label>
                 <div class="flex items-center space-x-3 mb-3">
-                  <div class="w-10 h-10 rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.gray }" />
-                  <code class="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{{ theme.gray }}</code>
-                </div>
-                <UColorPicker
-                  v-model="grayColor"
-                  @update:model-value="updateGrayColor"
-                  :presets="grayPresets"
-                  mode="click"
-                />
+                  <div class="w-10 h-10 rounded-lg border-2 shadow-sm" :style="{ backgroundColor: theme.gray }">
+                    <input type="color"
+                      v-model="grayColor"
+                      @update:model-value="updateGrayColor"
+                      class="w-12 h-12 opacity-0"
+                    />
+                  </div>
+                  <code class="font-mono text-sm bg-neutral-100 px-2 py-1 rounded">{{ theme.gray }}</code>
+                </div>                
               </div>
             </div>
           </UCard>
@@ -157,7 +134,7 @@ const primaryColor = computed({
 })
 
 const secondaryColor = computed({
-  get: () => themeStore.theme.secondary || '#10b981',
+  get: () => themeStore.theme.secondary || '#ffffff',
   set: (value) => themeStore.updateTheme({ secondary: value })
 })
 
@@ -183,14 +160,6 @@ const grayPresets = [
   ['#475569', '#334155', '#1e293b']
 ]
 
-const primaryColors = [
-  { name: 'blue', label: 'Blue' },
-  { name: 'green', label: 'Green' },
-  { name: 'red', label: 'Red' },
-  { name: 'purple', label: 'Purple' },
-  { name: 'orange', label: 'Orange' }
-]
-
 const backgrounds = [
   { value: 'bg-gradient-1', label: 'Gradient 1' },
   { value: 'bg-gradient-2', label: 'Gradient 2' },
@@ -201,11 +170,6 @@ const backgrounds = [
 
 const isDark = computed(() => colorMode.value === 'dark')
 
-const setPrimaryColor = (colorName: string) => {
-  const color = `var(--color-${colorName}-500)`
-  themeStore.updateTheme({ primary: color })
-}
-
 const setBackground = (bgClass: string) => {
   themeStore.updateTheme({ background: bgClass })
 }
@@ -213,4 +177,17 @@ const setBackground = (bgClass: string) => {
 const toggleDarkMode = () => {
   colorMode.preference = isDark.value ? 'light' : 'dark'
 }
+
+const updatePrimaryColor = (color: string) => {
+  themeStore.updateTheme({ primary: color })
+}
+
+const updateSecondaryColor = (color: string) => {
+  themeStore.updateTheme({ secondary: color })
+}
+
+const updateGrayColor = (color: string) => {
+  themeStore.updateTheme({ gray: color })
+}
+
 </script>
