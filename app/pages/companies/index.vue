@@ -97,8 +97,7 @@ const deleteCompany = async (company: any) => {
       :total="total"
       :page-size="10"
       @search="(val) => search = val"
-      @view="(row) => router.push(`/companies/${row.id}`)"
-      @edit="(row) => router.push(`/companies/${row.id}`)"
+      @edit="(row) => router.push(`/companies/${row.original.id}`)"
 
     >
       <template #row-action-menu="{ row }">

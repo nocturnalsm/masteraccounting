@@ -16,6 +16,7 @@ const logo = ref(null)
 const formState = reactive({
     name: '',
     slug: '',
+    description: '',
     logo_url: ''
 })
 
@@ -27,6 +28,7 @@ const fetchCompany = async () => {
     Object.assign(formState, {
         name: company.value.name,
         slug: company.value.slug,
+        description: company.value.description,
         logo_url: company.value.logo_url
     })
   } catch (error) {
@@ -80,6 +82,7 @@ onMounted(fetchCompany)
 
   <ProfileLayout
     :title="company.name || 'Company Details'"
+    :loading="loading || saveLoading"
     back-to="/companies"
     @save="saveCompany"
     @delete="deleteCompany"
@@ -97,7 +100,7 @@ onMounted(fetchCompany)
             {{ company.name }}
           </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            {{ company.code }}
+            {{ company.description }}
           </p>
         </div>
         <div class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-2 text-left">
@@ -118,37 +121,24 @@ onMounted(fetchCompany)
     </template>
 
     <template #details>
-      <div class="space-y-4">        
-        <FormGroup label="Company Name" required>
-          <UInput size="lg" class="w-full" v-model="formState.name" placeholder="Company name" />
-        </FormGroup>
-        <FormGroup label="Company Code" required>
-          <UInput size="lg" v-model="formState.slug" placeholder="Company code" />
-        </FormGroup>
-        <AvatarUpload 
-          v-model="formState.logo_url"
-          @file-selected="(file) => logo = file"
-          label="Company Logo"
-        />
-      </div>
-    </template>
-
-    <template #settings>
-      <div class="space-y-4">
-        <FormGroup label="Fiscal Year Start">
-          <UInput v-model="company.fiscal_year_start" type="date" />
-        </FormGroup>
-        <FormGroup label="Base Currency">
-          <USelectMenu
-            v-model="company.currency"
-            :options="[
-              { label: 'USD', value: 'USD' },
-              { label: 'EUR', value: 'EUR' },
-              { label: 'GBP', value: 'GBP' }
-            ]"
+      <UForm :state="formState" :disabled="loading || saveLoading">
+        <div class="space-y-4">        
+          <FormGroup label="Company Name" required>
+            <UInput size="lg" class="w-full" v-model="formState.name" placeholder="Company name" />
+          </FormGroup>
+          <FormGroup label="Description">
+            <UInput size="lg" class="w-full" v-model="formState.description" placeholder="Company description" />
+          </FormGroup>
+          <FormGroup label="Company Code" required>
+            <UInput size="lg" v-model="formState.slug" placeholder="Company code" />
+          </FormGroup>
+          <AvatarUpload 
+            v-model="formState.logo_url"
+            @file-selected="(file) => logo = file"
+            label="Company Logo"
           />
-        </FormGroup>
-      </div>
+        </div>
+      </UForm>
     </template>
   </ProfileLayout>
 </template>

@@ -11,8 +11,19 @@ const router = useRouter()
 const { can } = useAuth()
 
 const UBadge = resolveComponent('UBadge')
+const UAvatar = resolveComponent('UAvatar')
 
 const columns = [
+  { accessorKey: 'avatar_url', header: '', sortable: false, cell: ({ row }) => {
+    const avatar = row.getValue('avatar_url')
+    return h('div', [
+      h(UAvatar, {
+        src: avatar,
+        alt: row.original.full_name,
+        class: 'w-10 h-10 rounded-full object-cover'
+      })
+    ])
+  }},
   { accessorKey: 'first_name', header: 'First Name', sortable: true },
   { accessorKey: 'last_name', header: 'Last Name', sortable: true },
   { accessorKey: 'email', header: 'Email', sortable: true },
@@ -55,7 +66,7 @@ const { data: response, pending, refresh } = await useAsyncData(
   () => get('/users', {
     params: {
       page: page.value,
-      sort: sortBy.value.column ?? 'name',
+      sort: sortBy.value.column ?? 'first_name',
       order: sortBy.value.direction ?? 'asc',
       search: search.value
     }
@@ -110,15 +121,13 @@ const deleteUser = async (user: any) => {
     <DataTable
       v-model:page="page"
       v-model:sort="sortBy"
-      v-model:search="search"
       :columns="columns"
       :data="users"
       :total="total"
       :loading="pending"
       :page-size="10"
       @search="(value) => search = value"
-      @view="(row) => router.push(`/users/${row.id}`)"
-      @edit="(row) => router.push(`/users/${row.id}`)"
+      @edit="(row) => router.push(`/users/${row.original.id}`)"
       @delete="deleteUser"
     />
 

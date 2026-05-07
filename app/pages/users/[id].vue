@@ -123,6 +123,7 @@ const handleSelectFile = file => {
     :title="user.name || 'User Details'"
     back-to="/users"
     @save="saveUser"
+    :loading="saveLoading"
     @delete="deleteUser"
   >
     <template #summary>
@@ -164,7 +165,7 @@ const handleSelectFile = file => {
     </template>
 
     <template #details>
-      <UForm :state="formState">
+      <UForm :state="formState" :disabled="loading || saveLoading">
         <div class="space-y-4">        
           <div class="block lg:flex gap-x-4 space-y-4 lg:space-y-0">
             <FormGroup label="First Name" required>

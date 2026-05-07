@@ -1,7 +1,8 @@
 <script setup lang="ts">
 const props = defineProps<{
   title: string
-  backTo: string
+  backTo: string,
+  loading?: boolean,
 }>()
 
 const emit = defineEmits<{
@@ -18,6 +19,7 @@ const activeTab = ref('details')
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-4">
         <UButton
+          :disabled="loading"
           variant="ghost"
           color="neutral"
           icon="i-lucide-arrow-left"
@@ -29,17 +31,20 @@ const activeTab = ref('details')
       </div>
       <div class="flex gap-2">
         <UButton
+          :disabled="loading"
           variant="outline"
           color="error"
           icon="i-lucide-trash-2"
           label="Delete"
-          @click="emit('delete')"
+          @click.prevent="emit('delete')"
         />
         <UButton
+          :disabled="loading"
+          variant="solid"
           color="primary"
           icon="i-lucide-save"
           label="Save Changes"
-          @click="emit('save')"
+          @click.prevent="emit('save')"
         />
       </div>
     </div>
@@ -56,23 +61,7 @@ const activeTab = ref('details')
       <!-- Right Side - Details -->
       <div class="lg:col-span-2">
         <UCard>
-          <template #header>
-            <UTabs
-              v-model="activeTab"
-              :items="[
-                { label: 'Details', value: 'details' },
-                { label: 'Settings', value: 'settings' }
-              ]"
-            />
-          </template>
-
-          <div v-if="activeTab === 'details'" class="space-y-4">
-            <slot name="details" />
-          </div>
-
-          <div v-else-if="activeTab === 'settings'" class="space-y-4">
-            <slot name="settings" />
-          </div>
+          <slot name="details" />
         </UCard>
       </div>
     </div>

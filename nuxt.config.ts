@@ -3,9 +3,14 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
-    '@pinia/nuxt'
+    '@pinia/nuxt',
+    '@nuxtjs/color-mode'
   ],
 
+  colorMode: {
+    classSuffix: ''
+  },
+  
   devtools: {
     enabled: true
   },
