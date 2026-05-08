@@ -1,33 +1,6 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
 
-/* Custom background patterns */
-.bg-gradient-1 {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-.bg-gradient-2 {
-  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-.bg-gradient-3 {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-.bg-gradient-4 {
-  background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-}
-.bg-gradient-5 {
-  background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
-}
-.bg-pattern-dots {
-  background-image: 
-    radial-gradient(#667eea 1px, transparent 1px);
-  background-size: 20px 20px;
-}
-.bg-pattern-stripes {
-  background-image: 
-    linear-gradient(90deg, transparent 49%, #667eea 49%, #667eea 51%, transparent 51%);
-  background-size: 20px 100%;
-}
-
 @theme {
 
   --color-primary: oklch(68.5% 0.169 237.323);

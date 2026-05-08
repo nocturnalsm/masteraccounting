@@ -6,13 +6,13 @@
         <p class="text-gray-600 dark:text-gray-400">Manage your settings</p>
       </div>
       <!-- Tabs Container -->
-      <UCard class="bg-white w-full">
+      <UCard class="w-full">
         <UTabs 
           :items="tabs"
         >
             <!-- Custom Fields Tab -->
             <template #custom_fields>
-              <div>
+              <div class="p-2">
                 <h3 class="text-lg font-semibold text-gray-900 mb-6">Custom Fields</h3>
                 <div class="space-y-4">
                   <UCard>
@@ -72,7 +72,7 @@
               </div>
             </template>
             <template #activity_log>
-              <div>
+              <div class="p-2">
                 <h3 class="text-lg font-semibold text-gray-900 mb-6">Activity Log</h3>
                 <div class="space-y-4">
                   <UInput 
@@ -87,10 +87,10 @@
               </div>
             </template>
             <template #color_theme>
-                <SettingsTheme />
+                <SettingsTheme class="p-2" />
             </template>
             <template #misc>
-              <div>
+              <div class="p-2">
                 <h3 class="text-lg font-semibold text-gray-900 mb-6">Miscellaneous Settings</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <UCard>

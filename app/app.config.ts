@@ -4,9 +4,7 @@ export default defineAppConfig({
     primary: '#0ea5e9',
     secondary: '#ffffff',
     gray: '#64748b',
-    background: 'bg-gradient-1'
+    background: '#ffffff',
+    dark: false
   }
 })
-
-
-      

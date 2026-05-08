@@ -3,12 +3,15 @@ interface ThemeConfig {
   primary: string
   secondary?: string
   gray?: string
-  background?: string
+  background?: string,
+  dark?: boolean
 }
 
 export const useTheme = () => {
     
   const appConfig = useAppConfig()
+  const setting = useSettings()
+  const toast = useToast()
 
   const injectFullScale = (key: string, baseHex: string) => {
     const el = document.documentElement
@@ -43,21 +46,29 @@ export const useTheme = () => {
     
     if (config.primary) {
       injectFullScale('primary', config.primary)
-      updateAppConfig({ theme: { primary: config.primary }})
+      setting.updateSetting('theme',  { 
+        primary: config.primary 
+      })
     }
     
     if (config.secondary) {
       injectFullScale('secondary', config.secondary)
-      updateAppConfig({ theme: { secondary: config.secondary }})
+      setting.updateSetting('theme',  { 
+        secondary: config.secondary 
+      })
     }
 
     if (config.gray) {
       injectFullScale('gray', config.gray)
-      updateAppConfig({ theme: { gray: config.gray }})
+      setting.updateSetting('theme',  { 
+        gray: config.gray 
+      })
     }
 
     if (config.background) {
-      updateAppConfig({ theme: { background: config.background }})
+      setting.updateSetting('theme',  { 
+        background: config.background 
+      })
     }
   }
 
@@ -69,18 +80,15 @@ export const useTheme = () => {
     }
   }
 
-  const saveTheme = () => {
-    //localStorage.setItem('custom-theme', JSON.stringify(theme.value))
-  }
-
-  const resetTheme = () => {
-    updateTheme({
-      primary: '#0ea5e9',
-      secondary: '#737373',
-      gray: '#64748b',
-      background: 'bg-gradient-1'
+  const saveTheme = async () => {
+    const { post } = useApi()
+    const { settings } = setting
+    const response = await post("user/settings/theme", settings.theme)
+    toast.add({
+      title: 'Success',
+      description: `Color theme saved successfully`,
+      color: 'success'
     })
-    //localStorage.removeItem('custom-theme')
   }
 
   // Color utilities
@@ -118,26 +126,7 @@ export const useTheme = () => {
       Math.round(Math.max(0, rgb.g - (rgb.g * percent))),
       Math.round(Math.max(0, rgb.b - (rgb.b * percent)))
     )
-  }
-
-  const generateGrayShades = (baseColor: string): Record<string, string> => {
-    const rgb = hexToRgb(baseColor)
-    if (!rgb) return {}
-    
-    const shades: Record<string, string> = {}
-    const steps = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950]
-    
-    steps.forEach((step, index) => {
-      const factor = index / (steps.length - 1)
-      const lightness = 0.95 - (factor * 0.9)
-      const r = Math.round(rgb.r * lightness)
-      const g = Math.round(rgb.g * lightness)
-      const b = Math.round(rgb.b * lightness)
-      shades[step] = rgbToHex(r, g, b)
-    })
-    
-    return shades
-  }
+  }  
 
   // Initialize
   onMounted(() => {
@@ -147,7 +136,6 @@ export const useTheme = () => {
   return {
     updateTheme,
     saveTheme,
-    resetTheme,
     loadSavedTheme
   }
 }
