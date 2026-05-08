@@ -1,8 +1,12 @@
 // app.config.ts
 export default defineAppConfig({
-  ui: {
-    primary: 'primary',
-    secondary: 'secondary',
-    gray: 'gray'
+  theme: {
+    primary: '#0ea5e9',
+    secondary: '#ffffff',
+    gray: '#64748b',
+    background: 'bg-gradient-1'
   }
 })
+
+
+      

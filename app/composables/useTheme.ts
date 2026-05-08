@@ -6,16 +6,8 @@ interface ThemeConfig {
   background?: string
 }
 
-const theme = ref<ThemeConfig>({
-    primary: '#0ea5e9',
-    secondary: '#737373',
-    gray: '#64748b',    background: 'bg-gradient-1'
-})
-
-
 export const useTheme = () => {
-  
-  // FIX: Access appConfig instead of $ui
+    
   const appConfig = useAppConfig()
 
   const injectFullScale = (key: string, baseHex: string) => {
@@ -37,41 +29,35 @@ export const useTheme = () => {
         color = baseHex
       }
       
-      const rgb = hexToRgb(color)
-      console.log(rgb)
-      if (rgb){
-        const rgbValue = `${rgb.r}, ${rgb.g}, ${rgb.b}`
-        el.style.setProperty(`--color-${key}-${step}`, rgbValue)
+      if (color){
+        el.style.setProperty(`--color-${key}-${step}`, color)
       }
     })
 
-    const rgbUi = hexToRgb(baseHex)
-    console.log(rgbUi)
-    const rgbUiValue = `${rgbUi.r}, ${rgbUi.g}, ${rgbUi.b}`
-    
-    el.style.setProperty(`--color-${key}`, rgbUiValue)
+    if (baseHex){
+      el.style.setProperty(`--color-${key}`, baseHex)
+    }
   }
 
   const updateTheme = (config: Partial<ThemeConfig>) => {
-    Object.assign(theme.value, config)
     
     if (config.primary) {
       injectFullScale('primary', config.primary)
-      appConfig.ui.primary = 'primary'
+      updateAppConfig({ theme: { primary: config.primary }})
     }
     
     if (config.secondary) {
       injectFullScale('secondary', config.secondary)
-      appConfig.ui.secondary = 'secondary'
+      updateAppConfig({ theme: { secondary: config.secondary }})
     }
 
     if (config.gray) {
       injectFullScale('gray', config.gray)
-      appConfig.ui.gray = 'gray'
+      updateAppConfig({ theme: { gray: config.gray }})
     }
 
     if (config.background) {
-      theme.value.background = config.background
+      updateAppConfig({ theme: { background: config.background }})
     }
   }
 
@@ -159,7 +145,6 @@ export const useTheme = () => {
   })
 
   return {
-    theme,
     updateTheme,
     saveTheme,
     resetTheme,

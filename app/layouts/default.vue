@@ -1,6 +1,6 @@
 <script setup lang="ts">
   const { user } = useAuth()
-  const { theme } = useTheme()
+  const { theme } = useSettings()
 </script>
 
 <template>
