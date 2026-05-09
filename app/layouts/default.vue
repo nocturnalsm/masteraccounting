@@ -1,9 +1,8 @@
 <script setup lang="ts">
   const { user } = useAuth()
   const { settings } = useSettings()
-
-  const background = computed(() => ({background: settings.theme.background}))
-
+  const appConfig = useAppConfig()
+  const background = computed(() => ({background: settings.theme?.background ?? appConfig.theme.background}))
 </script>
 
 <template>

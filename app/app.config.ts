@@ -5,6 +5,6 @@ export default defineAppConfig({
     secondary: '#ffffff',
     gray: '#64748b',
     background: '#ffffff',
-    dark: false
+    darkMode: false
   }
 })

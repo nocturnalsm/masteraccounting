@@ -4,14 +4,14 @@ interface ThemeConfig {
   secondary?: string
   gray?: string
   background?: string,
-  dark?: boolean
+  darkMode?: boolean
 }
 
 export const useTheme = () => {
     
-  const appConfig = useAppConfig()
   const setting = useSettings()
   const toast = useToast()
+  const colorMode = useColorMode()
 
   const injectFullScale = (key: string, baseHex: string) => {
     const el = document.documentElement
@@ -44,54 +44,17 @@ export const useTheme = () => {
 
   const updateTheme = (config: Partial<ThemeConfig>) => {
     
-    if (config.primary) {
-      injectFullScale('primary', config.primary)
-      setting.updateSetting('theme',  { 
-        primary: config.primary 
-      })
-    }
-    
-    if (config.secondary) {
-      injectFullScale('secondary', config.secondary)
-      setting.updateSetting('theme',  { 
-        secondary: config.secondary 
-      })
-    }
+    const currentTheme = setting.settings.theme || {}
 
-    if (config.gray) {
-      injectFullScale('gray', config.gray)
-      setting.updateSetting('theme',  { 
-        gray: config.gray 
-      })
-    }
+    if (config.primary) injectFullScale('primary', config.primary)
+    if (config.secondary) injectFullScale('secondary', config.secondary)
+    if (config.gray) injectFullScale('gray', config.gray)
 
-    if (config.background) {
-      setting.updateSetting('theme',  { 
-        background: config.background 
-      })
-    }
+    // Update the store's generic theme key
+    setting.updateSetting('theme', { ...currentTheme, ...config })
+
   }
-
-  const loadSavedTheme = () => {
-    const saved = localStorage.getItem('custom-theme')
-    if (saved) {
-      const savedTheme = JSON.parse(saved) as ThemeConfig
-      updateTheme(savedTheme)
-    }
-  }
-
-  const saveTheme = async () => {
-    const { post } = useApi()
-    const { settings } = setting
-    const response = await post("user/settings/theme", settings.theme)
-    toast.add({
-      title: 'Success',
-      description: `Color theme saved successfully`,
-      color: 'success'
-    })
-  }
-
-  // Color utilities
+    // Color utilities
   const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
     return result ? {
@@ -128,14 +91,39 @@ export const useTheme = () => {
     )
   }  
 
-  // Initialize
-  onMounted(() => {
-    loadSavedTheme()
-  })
+  const saveTheme = async () => {
+    try {
+      await setting.persistSettings()
+      toast.add({ title: 'Success', description: 'Theme saved', color: 'success' })
+    } catch (e) {
+      toast.add({ title: 'Error', description: 'Failed to save', color: 'error' })
+    }
+  }
+
+  const applyTheme = (theme: any) => {
+    if (!theme) return
+    if (theme.primary) injectFullScale('primary', theme.primary)
+    if (theme.secondary) injectFullScale('secondary', theme.secondary)
+    if (theme.gray) injectFullScale('gray', theme.gray)
+    if (theme.darkMode) {
+      colorMode.preference = theme.darkMode ? 'dark' : 'light'
+    }
+    if (theme.background){
+      setting.updateSetting('theme', { ...theme, background: theme.background })
+    }
+  }
+
+  // Watch for any change in the store's settings
+  watch(
+    () => setting.settings.theme,
+    (newTheme) => {
+      if (newTheme) applyTheme(newTheme)
+    },
+    { deep: true, immediate: true }
+  )
 
   return {
     updateTheme,
-    saveTheme,
-    loadSavedTheme
+    saveTheme
   }
 }

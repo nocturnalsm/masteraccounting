@@ -61,10 +61,10 @@
             <UButton class="px-4 block" @click="toggleDarkMode">
               {{ isDark ? '☀️ Light' : '🌙 Dark' }}
             </UButton>
-            <UButton class="block" @click="themeStore.saveTheme" color="success">
+            <UButton class="block" @click.prevent="themeStore.saveTheme" color="success">
               Save Theme
             </UButton>
-            <UButton class="block" @click="themeStore.loadSavedTheme" color="warning" variant="outline">
+            <UButton class="block" @click.prevent="themeStore.loadSavedTheme" color="warning" variant="outline">
               Reset
             </UButton>
           </div>
@@ -105,7 +105,7 @@ const isDark = computed(() => colorMode.value === 'dark')
 
 const toggleDarkMode = () => {
   colorMode.preference = isDark.value ? 'light' : 'dark'
-  themeStore.updateTheme({ dark: isDark.value })
+  themeStore.updateTheme({ darkMode: isDark.value })
 }
 
 const updatePrimaryColor = (color: string) => {
