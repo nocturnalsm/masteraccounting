@@ -9,7 +9,7 @@
             <h2 class="text-lg font-semibold">Background Colors</h2>
           </template>
           <div class="space-y-4">
-            <SettingsThemeBackground v-model="bgColor" />        
+            <SettingsThemeBackground @update:model-value="updateBgColor" v-model="bgColor" />        
           </div>
         </UCard>
         <UCard>
@@ -95,16 +95,13 @@ const grayColor = computed({
   set: (value) => themeStore.updateTheme({ gray: value })
 })
 
-const bgColor = computed({
-  get: () => settings.theme.background,
-  set: (value) => themeStore.updateTheme({ background: value })
-})
+const bgColor = computed(() => settings.theme.background)
 
 
 const isDark = computed(() => colorMode.value === 'dark')
 
 const toggleDarkMode = () => {
-  colorMode.preference = isDark.value ? 'light' : 'dark'
+  colorMode.value = isDark.value ? 'light' : 'dark'
   themeStore.updateTheme({ darkMode: isDark.value })
 }
 
@@ -118,6 +115,10 @@ const updateSecondaryColor = (color: string) => {
 
 const updateGrayColor = (color: string) => {
   themeStore.updateTheme({ gray: color })
+}
+
+const updateBgColor = (color: string) => {
+  themeStore.updateTheme({ background: color })
 }
 
 </script>

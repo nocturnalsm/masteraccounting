@@ -45,12 +45,15 @@ export const useTheme = () => {
   const updateTheme = (config: Partial<ThemeConfig>) => {
     
     const currentTheme = setting.settings.theme || {}
-
+    
     if (config.primary) injectFullScale('primary', config.primary)
     if (config.secondary) injectFullScale('secondary', config.secondary)
     if (config.gray) injectFullScale('gray', config.gray)
-
-    // Update the store's generic theme key
+    if (config.background) {      
+      let el = document.documentElement
+      el.style.setProperty(`--color-background`, config.background)
+    }
+    
     setting.updateSetting('theme', { ...currentTheme, ...config })
 
   }
@@ -109,7 +112,7 @@ export const useTheme = () => {
       colorMode.preference = theme.darkMode ? 'dark' : 'light'
     }
     if (theme.background){
-      setting.updateSetting('theme', { ...theme, background: theme.background })
+        document.documentElement.style.setProperty(`--color-background`, theme.background)
     }
   }
 

@@ -3,6 +3,8 @@
 
 @theme {
 
+  --color-background: #ffffff;
+  
   --color-primary: oklch(68.5% 0.169 237.323);
   --color-primary-50: oklch(97.7% 0.013 236.62);
   --color-primary-100: oklch(95.1% 0.026 236.824);
@@ -55,4 +57,6 @@
   --color-green-800: #016538;
   --color-green-900: #0A5331;
   --color-green-950: #052E16;
+
 }
+

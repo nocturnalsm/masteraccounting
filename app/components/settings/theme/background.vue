@@ -109,51 +109,7 @@
           </div>
         </div>
       </div>
-    </div>
-
-    <!-- Preview -->
-    <div v-if="activeTab == 'solid'" class="mb-6">
-      <label class="block text-sm font-medium text-gray-700 mb-3">Preview</label>
-      <div
-        class="w-full h-32 rounded-xl border-2 border-dashed border-gray-300 p-6 flex items-center justify-center relative overflow-hidden shadow-lg"
-        :style="{ background: selectedBackground }"
-      >
-        <span class="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-medium text-gray-700 shadow-lg border">
-          {{ isGradient ? 'Gradient Background' : 'Solid Background' }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Selected Value -->
-    <div v-if="activeTab == 'solid'" class="bg-white p-4 rounded-lg shadow-sm border border-gray-100">
-      <div class="flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <span class="text-sm font-medium text-gray-700">CSS Value:</span>
-          <code class="bg-gray-100 px-2 py-1 rounded text-xs font-mono text-gray-900 truncate max-w-[200px] sm:max-w-none">
-            {{ selectedBackground }}
-          </code>
-        </div>
-        <div class="flex gap-2">
-          <button
-            @click="copyToClipboard"
-            class="px-3 py-1.5 text-xs bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-all font-medium flex items-center gap-1"
-          >
-            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M8 2a1 1 0 000 2h2a1 1 0 100-2H8z"></path>
-              <path class="text-blue-500" d="M11 4H8a2 2 0 00-2 2v1h5V6a2 2 0 00-2-2z"></path>
-              <path fill-rule="evenodd" d="M10 9a1 1 0 00-1 1v5a1 1 0 102 0V10a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-            </svg>
-            Copy
-          </button>
-          <button
-            @click="resetBackground"
-            class="px-3 py-1.5 text-xs bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-all font-medium"
-          >
-            Reset
-          </button>
-        </div>
-      </div>
-    </div>
+    </div>    
   </div>
 </template>
 

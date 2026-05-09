@@ -28,7 +28,7 @@ export const useSettings = defineStore('settings', () => {
     const { get } = useApi()
 
     try {
-      settings.value = { ...appConfig }
+      settings.value = { theme: appConfig.theme }
       const remoteData = await get('user/settings')
       settings.value = defu(remoteData, settings.value)   
       cache.set(settings.value)

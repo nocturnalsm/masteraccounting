@@ -54,7 +54,7 @@ const masterItems = [
     <!-- Welcome -->          
     <div>
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-        Welcome back, {{ user?.name ?? 'User' }}
+        Welcome back, {{ user?.first_name ?? 'User' }}
       </h1>
       <p class="mt-2 text-gray-600 dark:text-gray-400">
         Here's what's happening in your accounting system today.
