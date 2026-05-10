@@ -225,24 +225,6 @@ const randomGradientAngle = () => {
   updateCustomGradient()
 }
 
-const copyToClipboard = async () => {
-  try {
-    await navigator.clipboard.writeText(selectedBackground.value)
-    copied.value = true
-    setTimeout(() => copied.value = false, 2000)
-  } catch {
-    // Fallback for older browsers
-    const textArea = document.createElement('textarea')
-    textArea.value = selectedBackground.value
-    document.body.appendChild(textArea)
-    textArea.select()
-    document.execCommand('copy')
-    document.body.removeChild(textArea)
-    copied.value = true
-    setTimeout(() => copied.value = false, 2000)
-  }
-}
-
 // Initialize from modelValue if it's a gradient
 watch(selectedBackground, (newValue) => {
   if (newValue?.includes('linear-gradient')) {

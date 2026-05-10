@@ -24,7 +24,6 @@ useSeoMeta({
 
 const setting = useSettings()
 const auth = useAuth()
-const { applyTheme } = useTheme() 
 
 // Initialize data strategy
 onMounted(async () => {

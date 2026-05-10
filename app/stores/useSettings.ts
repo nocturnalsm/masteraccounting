@@ -54,9 +54,14 @@ export const useSettings = defineStore('settings', () => {
     }
   }
 
-  const resetSettings = async () => {
+  const resetSettings = async (key = null) => {
     // Reverts local state by re-fetching from API/Cache
-    await fetchSettings(true) 
+    if (key){
+      console.log(key)
+    }
+    else {
+      await fetchSettings(true) 
+    }
   }
 
   const fetchDefaults = () => {

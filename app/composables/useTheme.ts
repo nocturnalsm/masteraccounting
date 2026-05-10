@@ -109,7 +109,7 @@ export const useTheme = () => {
     if (theme.secondary) injectFullScale('secondary', theme.secondary)
     if (theme.gray) injectFullScale('gray', theme.gray)
     if (theme.darkMode) {
-      colorMode.preference = theme.darkMode ? 'dark' : 'light'
+      colorMode.value = theme.darkMode ? 'dark' : 'light'
     }
     if (theme.background){
         document.documentElement.style.setProperty(`--color-background`, theme.background)
@@ -126,6 +126,7 @@ export const useTheme = () => {
   )
 
   return {
+    applyTheme,
     updateTheme,
     saveTheme
   }
